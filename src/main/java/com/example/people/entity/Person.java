@@ -10,13 +10,13 @@ public class Person {
     @GeneratedValue
     private int id;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "ROLL_NUMBER")
+    @Column(name = "roll_number")
     private int rollNo ;
 
-    @Column(name = "INFORMATION")
+    @Column(name = "information")
     private String info;
 
     @Column (name = "CLASS_NUMBER")

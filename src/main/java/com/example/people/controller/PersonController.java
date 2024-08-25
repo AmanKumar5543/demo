@@ -62,12 +62,12 @@ public List<Person> searchPeople (@RequestParam(name = "Roll no" ,required = fal
 
     @GetMapping("/people/{id}")
     public Optional getById(@PathVariable("id") Integer id) {
-        return this.personRepository.findById();
+        return this.personRepository.findById(id);
     }
 
-    @PostMapping
+    @PostMapping ("/people")
     public Person createNewName(@RequestBody Person person) {
-        Person newPerson = this.personRepository.save();
+        Person newPerson = this.personRepository.save(person);
         return newPerson;
     }
 
@@ -124,7 +124,7 @@ public List<Person> searchPeople (@RequestParam(name = "Roll no" ,required = fal
     }
     @DeleteMapping("people/{id}")
     public Person personTODelete (@PathVariable("id") Integer id , @RequestBody Person p ) {
-        Optional<Person> personToDeleteOptional = this.personRepository.findById();
+        Optional<Person> personToDeleteOptional = this.personRepository.findById(id);
 
         if (!personToDeleteOptional.isPresent()) {
             return null;

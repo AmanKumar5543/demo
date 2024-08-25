@@ -10,6 +10,7 @@ import com.example.people.repository.HouseRepository;
 
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 public class HouseController {
     private final HouseRepository houseRepository;
 
@@ -39,14 +40,14 @@ public class HouseController {
 
     @GetMapping("/house/{id}")
     public Optional getHouseById(@PathVariable("id") Integer id) {
-        return this.houseRepository.findAllById();
+        return this.houseRepository.findById(id);
 
     }
 
-    @PostMapping
+    @PostMapping ("/house")
     public House createANewName(@RequestBody House house) {
-        House newHouse = this.houseRepository.save();
-        return newHouse();
+        return houseRepository.save(house);
+
     }
 
     private House newHouse() {
@@ -56,7 +57,7 @@ public class HouseController {
 
     @PutMapping("/house/{id}")
     public House updateTheHouse(@PathVariable("id") Integer id, @RequestBody House h) {
-        Optional<House> updateTheHouseOptional = this.houseRepository.findAllById();
+        Optional<House> updateTheHouseOptional = this.houseRepository.findById(id);
 
         if (!updateTheHouseOptional.isPresent()) {
             return null;
@@ -81,15 +82,15 @@ public class HouseController {
 
         return houseToUpdate;
     }
-    @DeleteMapping("/house/id")
-    public Optional deletingAHouse (@PathVariable ("id") Integer id ,@RequestBody House h){
-        Optional <House> deletingAHouseOptional = this.houseRepository.findAllById();
+    @DeleteMapping("/house/{id}")
+    public Boolean deletingAHouse (@PathVariable ("id") Integer id ){
+        Optional <House> deletingAHouseOptional = this.houseRepository.findById(id);
 
         if (!deletingAHouseOptional.isPresent()){
-            return null;
+            return false;
         }else{
-            this.houseRepository.delete();
+            this.houseRepository.deleteById(id);
+            return true;
         }
-        return Optional.empty();
     }
 }

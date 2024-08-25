@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PersonRepository extends CrudRepository <Person,Integer> {
-    Optional findById();
 
-    Person save();
+
 
     List<Person> findByRollNo(int rollNo);
     List<Person> findByName (String name);
