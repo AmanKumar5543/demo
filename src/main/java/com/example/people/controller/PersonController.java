@@ -1,5 +1,8 @@
-package com.example.people.entity;
+package com.example.people.controller;
+
 import java.lang.Iterable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.example.people.repository.PersonRepository;
@@ -13,7 +16,45 @@ public class PersonController {
     public PersonController(final PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
+//    Querry Breathing First form
+//    @GetMapping("/people/search")
+//    public List<Person> searchPeople (@RequestParam (name ="RollNo",required = false)int rollNo){
+//        if (rollNo != 0){
+//            return this.personRepository.findByRollNo(rollNo);
+//        }else{
+//            return new ArrayList<>();
+//        }
+//
 
+//    Querry breathing second form
+//    @GetMapping("/people/search")
+//    public List<Person> searchPeople (@RequestParam(name = "Roll no" ,required = false)int rollNo,
+//                                      @RequestParam(name = "Name" ,required = false)String name){
+//        if (rollNo !=0){
+//            return this.personRepository.findByRollNo(rollNo);
+//        } else if (name != null) {
+//            return this.personRepository.findByName(name);
+//        }else {
+//            return new ArrayList<>();
+//        }
+
+//    Querry breathing third form
+@GetMapping("/people/search")
+public List<Person> searchPeople (@RequestParam(name = "Roll no" ,required = false)int rollNo,
+                                  @RequestParam(name = "Name" ,required = false)String name){
+    if (rollNo !=0 && name != null ) {
+        return this.personRepository.findByRollNoAndName(rollNo, name);
+    } else if (rollNo != 0) {
+        return this.personRepository.findByRollNo(rollNo);
+    } else if (name != null) {
+        return this.personRepository.findByName(name);
+    }else {
+        return new ArrayList<>();
+    }
+
+
+
+    }
     @GetMapping("/people")
     public Iterable<Person> getAllNames() {
         return this.personRepository.findAll();

@@ -1,7 +1,11 @@
-package com.example.people.entity;
+package com.example.people.controller;
+
 import java.lang.Iterable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import com.example.people.entity.House;
 import com.example.people.repository.HouseRepository;
 
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +15,20 @@ public class HouseController {
 
     public HouseController(final HouseRepository houseRepository) {
         this.houseRepository = houseRepository;
+    }
+
+
+    @GetMapping("/house/search")
+    public List<House> searchHouse(@RequestParam(name = "Grade" , required = false)char grade,
+            @RequestParam(name = "Price" ,required = false)double Maxprice){
+        if (grade  != 0){
+            return this.houseRepository.findByGrade(grade);
+        } else if (Maxprice != 0) {
+            return this.houseRepository.findByPrice(Maxprice);
+        } else{
+            return new ArrayList<>();
+        }
+
     }
 
     @GetMapping("/house")
@@ -70,7 +88,7 @@ public class HouseController {
         if (!deletingAHouseOptional.isPresent()){
             return null;
         }else{
-        this.houseRepository.delete();
+            this.houseRepository.delete();
         }
         return Optional.empty();
     }
