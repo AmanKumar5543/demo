@@ -50,9 +50,6 @@ public class HouseController {
 
     }
 
-    private House newHouse() {
-        return null;
-    }
 
 
     @PutMapping("/house/{id}")

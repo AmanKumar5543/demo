@@ -16,10 +16,10 @@ public class Person {
     @Column(name = "roll_number")
     private int rollNo ;
 
-    @Column(name = "information")
+    @Column(name = "info")
     private String info;
 
-    @Column (name = "CLASS_NUMBER")
+    @Column (name = "class_no")
     private int  classNo ;
 
     public int getId (){
@@ -29,7 +29,7 @@ public class Person {
         return name;
     }
     public void setName(String name) {
-        this.name = this.name;
+        this.name = name;
     }
 
     public int getRollNo() {
