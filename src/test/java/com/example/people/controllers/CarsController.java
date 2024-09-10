@@ -2,10 +2,8 @@ package com.example.people.controllers;
 
 import com.example.people.entity.Cars;
 import com.example.people.repositories.CarsRepository;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +13,21 @@ public class CarsController{
 
     public CarsController(final CarsRepository carsRepository){
         this.carsRepository = carsRepository;
+    }
+
+    @GetMapping("/cars/search")
+    public List <Cars> searchByCar (@RequestParam (name = "Model" ,required = false)String model ,
+                                    @RequestParam (name = "Grade" ,required = false)char grade){
+        if (model != null && grade != 0 ){
+            return this.carsRepository.findByCarModelAndGrade(model ,grade);
+        } else if (model != null) {
+            return this.carsRepository.findByCarModel(model);
+        } else if (grade != 0) {
+            return this.carsRepository.findByGrade(grade);
+        }else{
+            return null;
+        }
+
     }
 
     @GetMapping("/cars")

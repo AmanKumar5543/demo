@@ -23,7 +23,7 @@ public class Cars {
     @Column(name = "Price")
     private double price;
 
-    @Column (name = "Gerade")
+    @Column (name = "Grade")
     private char grade;
 
     public int getId() {

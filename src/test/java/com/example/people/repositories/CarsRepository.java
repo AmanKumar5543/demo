@@ -1,10 +1,11 @@
 package com.example.people.repositories;
-import org.springframework.data.repository.CrudRepository;
 import com.example.people.entity.Cars;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CarsRepository extends CrudRepository <Cars ,Integer>{
-  List<Cars> findByModel(String carModel);
+  List<Cars> findByCarModel (String carModal);
+  List<Cars> findByGrade (char grade);
+  List<Cars> findByCarModelAndGrade (String carModel , char grade);
 }

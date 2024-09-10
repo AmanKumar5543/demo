@@ -1,11 +1,11 @@
-package com.example.people.controller;
+package com.example.people.controllers;
 
 import java.lang.Iterable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.people.repository.PersonRepository;
+import com.example.people.repositories.PersonRepository;
 import com.example.people.entity.Person;
 import org.springframework.web.bind.annotation.*;
 
@@ -119,8 +119,8 @@ public List<Person> searchPeople (@RequestParam(name = "Roll no" ,required = fal
             personToUpdate.setInfo(p.getInfo());
         }
 
-        Person updatedPerson = this.personRepository.save(personToUpdate);
-        return updatedPerson;
+        Person updatePerson = this.personRepository.save(personToUpdate);
+        return updatePerson;
     }
     @DeleteMapping("people/{id}")
     public Person personTODelete (@PathVariable("id") Integer id , @RequestBody Person p ) {

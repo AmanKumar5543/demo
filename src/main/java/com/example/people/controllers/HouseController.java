@@ -1,4 +1,4 @@
-package com.example.people.controller;
+package com.example.people.controllers;
 
 import java.lang.Iterable;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.people.entity.House;
-import com.example.people.repository.HouseRepository;
+import com.example.people.repositories.HouseRepository;
 
 import org.springframework.web.bind.annotation.*;
 
