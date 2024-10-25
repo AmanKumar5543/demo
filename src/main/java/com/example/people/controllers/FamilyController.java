@@ -18,12 +18,12 @@ public class FamilyController {
     }
 
     @GetMapping("/family")
-    public Iterable getFamily(){
+    public Iterable<Family> getFamily(){
         return this.familyRepository.findAll();
     }
 
     @GetMapping ("/family/{id}")
-    public Optional getFamilyById (@PathVariable ("id") Integer id){
+    public Optional<Family> getFamilyById (@PathVariable ("id") Integer id){
         return this.familyRepository.findById(id);
     }
 
