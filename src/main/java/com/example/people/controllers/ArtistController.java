@@ -26,7 +26,16 @@ public class ArtistController {
     }
     // Get all records of artists
     @GetMapping()
-    public Iterable getAllArtist() {
+    public Iterable getAllArtist(@RequestParam(name = "firstName" ,required = false) String firstName,
+                                 @RequestParam(name = "instrument",required = false) String instrument) {
+        if(firstName != null && instrument != null ){
+            return this.artistServices.getArtistByNameAndInstrument(firstName,instrument);
+        }
+        if (firstName != null){
+            return this.artistServices.getArtistByName(firstName);
+        }if(instrument != null){
+            return this.artistServices.getArtistByInstrument(instrument);
+        }
         return this.artistServices.getAllArtist();
     }
     // Get Artist as per their id.
@@ -35,15 +44,8 @@ public class ArtistController {
         return this.artistServices.getArtistById(id);
     }
 
-    // Get Artist by their names.
-    @GetMapping("/by-firstName")
-    public List getArtistByName(@RequestParam(name = "n" ,required = false) String firstName) {
-        if (firstName != null){
-            return this.artistServices.getArtistByName(firstName);
-        }else{
-            return new ArrayList<>();
-        }
-    }
+
+
     //Get Artist by their instruments
     @GetMapping("/instrument")
     public List getArtistByInstrument(@RequestParam(name = "instrument",required = false)String instrument ){
