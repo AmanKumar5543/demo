@@ -1,9 +1,9 @@
 package com.example.people.controllers;
 
 import com.example.people.entity.Artist;
-import com.example.people.entity.Name;
+
 import com.example.people.services.ArtistServices;
-import jakarta.persistence.criteria.CriteriaBuilder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/artists")
 public class ArtistController {
 
 
@@ -24,18 +25,18 @@ public class ArtistController {
         this.artistServices = artistServices;
     }
     // Get all records of artists
-    @GetMapping("/artists")
+    @GetMapping()
     public Iterable getAllArtist() {
         return this.artistServices.getAllArtist();
     }
     // Get Artist as per their id.
-    @GetMapping("/artists/{id}")
+    @GetMapping("/{id}")
     public Optional getArtistById(@PathVariable("id") Integer id) {
         return this.artistServices.getArtistById(id);
     }
 
     // Get Artist by their names.
-    @GetMapping("/artists/by-firstName")
+    @GetMapping("/by-firstName")
     public List getArtistByName(@RequestParam(name = "n" ,required = false) String firstName) {
         if (firstName != null){
             return this.artistServices.getArtistByName(firstName);
@@ -44,7 +45,7 @@ public class ArtistController {
         }
     }
     //Get Artist by their instruments
-    @GetMapping("/artists/instrument")
+    @GetMapping("/instrument")
     public List getArtistByInstrument(@RequestParam(name = "instrument",required = false)String instrument ){
         if (instrument != null){
             return this.artistServices.getArtistByInstrument(instrument);
@@ -53,19 +54,19 @@ public class ArtistController {
         }
     }
     //Get Artist by their name and instruments
-    @GetMapping("/artists/filterone")
+    @GetMapping("/filterone")
     public List<Artist> getArtistByNameAndInstrument(@RequestParam String firstName ,
                                                      @RequestParam String instrument){
         return artistServices.getArtistByNameAndInstrument(firstName, instrument);
     }
 
     //Create a new artists Record
-    @PostMapping("/artists")
+    @PostMapping()
     public Artist createArtist(@RequestBody Artist artist) {
         return this.artistServices.createArtist(artist);
     }
     //Update an artists record
-    @PutMapping("/artists/{id}")
+    @PutMapping("/{id}")
     public Artist updateArtist(@PathVariable("id") Integer id, @RequestBody Artist a) {
         Optional<Artist> getArtistOptional = this.artistServices.getArtistById(id);
 
@@ -94,7 +95,7 @@ public class ArtistController {
     }
 
     //Get artists records in the form of pages
-    @GetMapping("/artists/page")
+    @GetMapping("/page")
     public Page<Artist> findByPage (
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "2")int size){
@@ -102,7 +103,7 @@ public class ArtistController {
     }
 
     // Get records sorted by some field like their name or instrument or bookingPrice in asc or desc order
-    @GetMapping("/artists/sort")
+    @GetMapping("/sort")
     public List<Artist> sortByField (
             @RequestParam(defaultValue = "name")String sortBy,
             @RequestParam(defaultValue = "asc") String order
@@ -113,32 +114,32 @@ public class ArtistController {
     }
 
     //Delete a record of artist from artists record
-    @DeleteMapping("/artists/{id}")
+    @DeleteMapping("/{id}")
     public boolean deleteArtist (@PathVariable ("id") Integer id) {
         this.artistServices.deleteArtist(id);
         return true;
     }
 
     //Get the artist records with booking price less than some amount
-    @GetMapping("/artists/less-than")
+    @GetMapping("/less-than")
     public List<Artist> getArtistsByPriceLessThan(@RequestParam double bookingPrice) {
         return artistServices.getArtistsByPriceLessThan(bookingPrice);
     }
 
     //Get the artist records with booking price greater than some amount
-    @GetMapping("/artists/greater-than")
+    @GetMapping("/greater-than")
     public List<Artist> getArtistsByPriceGreaterThan(@RequestParam double bookingPrice) {
         return artistServices.getArtistsByPriceGreaterThan(bookingPrice);
     }
 
     //Get the artist records with booking price in range of some amount
-    @GetMapping("/artists/price-range")
+    @GetMapping("/price-range")
     public List<Artist> getArtistsByPriceRange(@RequestParam double minBookingPrice, @RequestParam double maxBookingPrice) {
         return artistServices.getArtistsByPriceRange(minBookingPrice, maxBookingPrice);
     }
 
     //Get the artist record by instrument and booking price
-    @GetMapping("/artists/filter")
+    @GetMapping("/filter")
     public List<Artist> getArtistsByInstrumentAndBookingPrice(
             @RequestParam String instrument,
             @RequestParam double minBookingPrice,
@@ -147,7 +148,7 @@ public class ArtistController {
     }
 
     //Get the artist record by instrument and booking price less than some amount
-    @GetMapping("/artists/filter/less-than")
+    @GetMapping("/filter/less-than")
     public List<Artist> getArtistsByInstrumentAndBookingPriceLessThan(
             @RequestParam String instrument,
             @RequestParam double bookingPrice) {
@@ -155,7 +156,7 @@ public class ArtistController {
     }
 
     //Get the artist record by instrument and booking price greater than some amount
-    @GetMapping("/artists/filter/greater-than")
+    @GetMapping("/filter/greater-than")
     public List<Artist> getArtistsByInstrumentAndBookingPriceGreaterThan(
             @RequestParam String instrument,
             @RequestParam double bookingPrice) {
@@ -163,7 +164,7 @@ public class ArtistController {
     }
 
     //Sorting and Pagination of artist records on the basis of some field
-    @GetMapping("/artists/sort-and-page")
+    @GetMapping("/sort-and-page")
     public Page<Artist> getPaginatedAndSortedArtists(
             @RequestParam(defaultValue = "0") int page,    // Page number (0-based index)
             @RequestParam(defaultValue = "10") int size,  // Page size
@@ -174,19 +175,19 @@ public class ArtistController {
     }
 
     //Getting records based on artist name , instrument and booking price
-    @GetMapping("/artists/filterTwo")
+    @GetMapping("/filterTwo")
     public List<Artist> getArtistByNameAndInstrumentAndBookingPrice(@RequestParam String firstName,
                                                                     @RequestParam String instrument,
                                                                     @RequestParam double bookingPrice){
         return artistServices.getArtistByNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
     }
 
-    @GetMapping("artists/by-fullName")
+    @GetMapping("/by-fullName")
     public List<Artist> getArtistByFullName (@RequestParam (name = "f",required = false)  String firstName,
                                              @RequestParam  (name = "l" ,required = false)String lastName){
         return artistServices.getArtistByFullName(firstName,lastName);
     }
-    @GetMapping("artists/sort-by-firstName")
+    @GetMapping("/sort-by-firstName")
     public List<Artist> getArtistsSorted(
             @RequestParam(defaultValue = "ASC") String direction) {
         Sort.Direction sortDirection = Sort.Direction.fromString(direction.toUpperCase());
