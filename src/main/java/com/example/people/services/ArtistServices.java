@@ -1,60 +1,111 @@
 package com.example.people.services;
 import com.example.people.entity.Artist;
-import com.example.people.controllers.ArtistController;
+import com.example.people.entity.Name;
 import com.example.people.repositories.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
+
 
 @Service
+public class ArtistServices {
 
-public class ArtistServices{
-
+    public final ArtistRepository artistRepository;
     @Autowired
-    public static ArtistRepository artistRepository;
-
-    public Iterable<Artist> getArtist() {
-        return artistRepository.findAll();
-
+    public ArtistServices(final ArtistRepository artistRepository){
+        this.artistRepository = artistRepository;
     }
-    public Optional<Artist> getArtistById(@PathVariable ("id") Integer id){
+
+    public Iterable getAllArtist(){
+        return artistRepository.findAll();
+    }
+
+    public Optional getArtistById(@PathVariable ("id") Integer id){
         return artistRepository.findById(id);
     }
 
-    public List<Artist> searchByName (@RequestParam (name ="name" , required = false)String name){
-        return artistRepository.findByName(name);
+    public List getArtistByName (@RequestParam(name ="name" ,required = false) String firstName){
+        return artistRepository.findByName_FirstName(firstName);
     }
 
-    public List<Artist> searchByInstrument (@RequestParam (name = "instrument" , required = false)String instrument){
+    public List getArtistByInstrument (@RequestParam(name = "name", required = false)String instrument){
         return artistRepository.findByInstrument(instrument);
     }
 
-    public Artist updateArtist (@PathVariable  ("id") Integer id, @RequestBody Artist artist){
+    public Artist createArtist (@RequestBody Artist artist){
         return artistRepository.save(artist);
     }
 
-    public boolean deleteArtist (@PathVariable ("id") Integer id , @RequestBody Artist a){
+    public Page<Artist> findByPage (int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return artistRepository.findAll(pageable);
+    }
+
+    public List<Artist> sortBySomeField(Sort sort){
+        return artistRepository.findAll(sort);
+    }
+    public Artist updateArtist (@PathVariable ("id") Integer id, @RequestBody Artist a){
+        return artistRepository.save(a);
+    }
+
+    public boolean deleteArtist (@PathVariable("id") Integer id){
         artistRepository.deleteById(id);
         return true;
     }
-
-    public static List<Artist> sortBySomeField(String field){
-       return artistRepository.findAll(Sort.by(Sort.Direction.ASC,field));
+    public List<Artist> getArtistsByPriceLessThan(double bookingPrice) {
+        return artistRepository.findByBookingPriceLessThan(bookingPrice);
     }
 
-    public static Page<Artist> pagination(int offset, int pagesize){
-        return artistRepository.findAll(PageRequest.of(offset, pagesize));
+    public List<Artist> getArtistsByPriceGreaterThan(double bookingPrice) {
+        return artistRepository.findByBookingPriceGreaterThan(bookingPrice);
 
+    }
+    public List<Artist> getArtistsByPriceRange(double minBookingPrice, double maxBookingPrice) {
+        return artistRepository.findByBookingPriceBetween(minBookingPrice, maxBookingPrice);
+    }
+
+    public List<Artist> getArtistsByInstrumentAndBookingPrice(String instrument, double minBookingPrice, double maxBookingPrice) {
+        return artistRepository.findByInstrumentAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
+    }
+
+    public List<Artist> getArtistsByInstrumentAndBookingPriceLessThan(String instrument, double bookingPrice) {
+        return artistRepository.findByInstrumentAndBookingPriceLessThan(instrument, bookingPrice);
+    }
+
+    public List<Artist> getArtistsByInstrumentAndBookingPriceGreaterThan(String instrument, double bookingPrice) {
+        return artistRepository.findByInstrumentAndBookingPriceGreaterThan(instrument, bookingPrice);
+    }
+    public Page<Artist> getPaginatedAndSortedArtists(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return artistRepository.findAll(pageable);
+    }
+
+    public List<Artist> getArtistByNameAndInstrument(String firstName, String instrument){
+        return artistRepository.findByName_FirstNameAndInstrument(firstName,instrument);
+    }
+
+    public List<Artist> getArtistByNameAndInstrumentAndBookingPrice(String firstName,String instrument,double bookingPrice){
+        return artistRepository.findByName_firstNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
+    }
+    public List<Artist> getArtistByFullName(String firstName ,String lastName){
+        return artistRepository.findByName_firstNameAndName_lastName(firstName,lastName);
+    }
+
+    public List<Artist> getArtistSortedByFirstName(Sort.Direction direction) {
+        return artistRepository.findAll(Sort.by(direction, "name.firstName"));
     }
 
 }
