@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +26,6 @@ public class ArtistController {
     public ArtistController(final ArtistServices artistServices) {
         this.artistServices = artistServices;
     }
-
-
     // Get all records of artists
     @GetMapping
     public Iterable getAllArtist(@RequestParam(name = "firstName" ,required = false) String firstName,
@@ -71,7 +70,7 @@ public class ArtistController {
     //Create a new artists Record
     @PostMapping
     public Artist createArtist(@RequestBody Artist artist) {
-        return this.artistServices.createArtist(artist);
+        return this.artistServices.artistRepository.save(artist);
     }
     //Update an artists record
     @PutMapping("/{id}")
@@ -98,8 +97,7 @@ public class ArtistController {
             updatedArtist.setBookingPrice(a.getBookingPrice());
         }
 
-        Artist updateArtist = this.artistServices.createArtist(updatedArtist);
-        return updateArtist;
+        return this.artistServices.artistRepository.save(updatedArtist);
     }
 
     //Get artists records in the form of pages
@@ -128,17 +126,8 @@ public class ArtistController {
         return true;
     }
 
-    //Get the artist records with booking price less than some amount
-    @GetMapping("/less-than")
-    public List<Artist> getArtistsByPriceLessThan(@RequestParam double bookingPrice) {
-        return artistServices.getArtistsByPriceLessThan(bookingPrice);
-    }
 
-    //Get the artist records with booking price greater than some amount
-    @GetMapping("/greater-than")
-    public List<Artist> getArtistsByPriceGreaterThan(@RequestParam double bookingPrice) {
-        return artistServices.getArtistsByPriceGreaterThan(bookingPrice);
-    }
+
 
     //Get the artist records with booking price in range of some amount
     @GetMapping("/price-range")
@@ -154,22 +143,31 @@ public class ArtistController {
             @RequestParam double maxBookingPrice) {
         return artistServices.getArtistsByInstrumentAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
     }
-
-    //Get the artist record by instrument and booking price less than some amount
-    @GetMapping("/filter/less-than")
-    public List<Artist> getArtistsByInstrumentAndBookingPriceLessThan(
-            @RequestParam String instrument,
-            @RequestParam double bookingPrice) {
-        return artistServices.getArtistsByInstrumentAndBookingPriceLessThan(instrument, bookingPrice);
+    //Get the artist records with booking price less than some amount
+    @GetMapping("/less-than")
+    public List<Artist> getArtistsByPriceLessThan( @RequestParam (name = "instrument" ,required = false) String instrument,
+                                                   @RequestParam (defaultValue = "0",name = "bookingPrice",required = false) double bookingPrice) {
+        if (instrument != null && bookingPrice != 0) {
+            return artistServices.getArtistsByInstrumentAndBookingPriceLessThan(instrument, bookingPrice);
+        }if(bookingPrice != 0) {
+            return artistServices.getArtistsByPriceLessThan(bookingPrice);
+        }return new ArrayList<>();
     }
 
-    //Get the artist record by instrument and booking price greater than some amount
-    @GetMapping("/filter/greater-than")
-    public List<Artist> getArtistsByInstrumentAndBookingPriceGreaterThan(
-            @RequestParam String instrument,
-            @RequestParam double bookingPrice) {
-        return artistServices.getArtistsByInstrumentAndBookingPriceGreaterThan(instrument, bookingPrice);
+
+    //Get the artist records with booking price greater than some amount
+    @GetMapping("/greater-than")
+    public List<Artist> getArtistsByPriceGreaterThan( @RequestParam(name = "instrument" ,required = false) String instrument,
+                                                      @RequestParam(defaultValue = "0",name = "bookingPrice",required = false) double bookingPrice) {
+        if(instrument != null &&bookingPrice !=0){
+            return artistServices.getArtistsByInstrumentAndBookingPriceGreaterThan(instrument, bookingPrice);
+        }if(bookingPrice !=0){
+        return artistServices.getArtistsByPriceGreaterThan(bookingPrice);}
+        {
+            return new ArrayList<>();
+        }
     }
+
 
     //Sorting and Pagination of artist records on the basis of some field
     @GetMapping("/sort-and-page")

@@ -45,9 +45,7 @@ public class ArtistServices {
         return artistRepository.findByBookingPrice(bookingPrice);
     }
 
-    public Artist createArtist (@RequestBody Artist artist){
-        return artistRepository.save(artist);
-    }
+
 
     public Page<Artist> findByPage (int page, int size){
         Pageable pageable = PageRequest.of(page, size);
