@@ -3,13 +3,14 @@ package com.example.people.controllers;
 import com.example.people.entity.Artist;
 
 import com.example.people.services.ArtistServices;
+import com.example.people.repositories.ArtistRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,17 +25,38 @@ public class ArtistController {
     public ArtistController(final ArtistServices artistServices) {
         this.artistServices = artistServices;
     }
+
+
     // Get all records of artists
-    @GetMapping()
+    @GetMapping
     public Iterable getAllArtist(@RequestParam(name = "firstName" ,required = false) String firstName,
-                                 @RequestParam(name = "instrument",required = false) String instrument) {
-        if(firstName != null && instrument != null ){
-            return this.artistServices.getArtistByNameAndInstrument(firstName,instrument);
+                                 @RequestParam(name = "instrument",required = false) String instrument,
+                                 @RequestParam(defaultValue = "0" , name = "bookingPrice",required = false)Double bookingPrice,
+                                 @RequestParam(name = "lastName",required = false)String lastName){
+
+        if (firstName !=null && instrument != null && bookingPrice !=0){
+            return this.artistServices.getArtistByNameAndInstrumentAndBookingPrice(firstName,instrument,bookingPrice);
         }
-        if (firstName != null){
-            return this.artistServices.getArtistByName(firstName);
-        }if(instrument != null){
+        if (instrument != null && bookingPrice !=0){
+            return this.artistServices.getArtistByInstrumentAndBookingPrice(instrument,bookingPrice);
+        }
+        if(firstName != null && instrument != null ) {
+            return this.artistServices.getArtistByNameAndInstrument(firstName, instrument);
+        }
+        if(firstName != null && bookingPrice!=0){
+            return this.artistServices.getArtistByFirstNameAndBookingPrice(firstName,bookingPrice);
+        }
+        if(firstName != null && lastName != null) {
+            return this.artistServices.getArtistByFullName(firstName,lastName);
+        }
+        if(firstName != null){
+            return this.artistServices.getArtistByFirstName(firstName);
+        }
+        if(instrument != null){
             return this.artistServices.getArtistByInstrument(instrument);
+        }
+        if(bookingPrice !=0) {
+            return this.artistServices.getArtistByBookingPrice(bookingPrice);
         }
         return this.artistServices.getAllArtist();
     }
@@ -46,24 +68,8 @@ public class ArtistController {
 
 
 
-    //Get Artist by their instruments
-    @GetMapping("/instrument")
-    public List getArtistByInstrument(@RequestParam(name = "instrument",required = false)String instrument ){
-        if (instrument != null){
-            return this.artistServices.getArtistByInstrument(instrument);
-        }else{
-            return new ArrayList<>();
-        }
-    }
-    //Get Artist by their name and instruments
-    @GetMapping("/filterone")
-    public List<Artist> getArtistByNameAndInstrument(@RequestParam String firstName ,
-                                                     @RequestParam String instrument){
-        return artistServices.getArtistByNameAndInstrument(firstName, instrument);
-    }
-
     //Create a new artists Record
-    @PostMapping()
+    @PostMapping
     public Artist createArtist(@RequestBody Artist artist) {
         return this.artistServices.createArtist(artist);
     }
@@ -146,7 +152,7 @@ public class ArtistController {
             @RequestParam String instrument,
             @RequestParam double minBookingPrice,
             @RequestParam double maxBookingPrice) {
-        return artistServices.getArtistsByInstrumentAndBookingPrice(instrument, minBookingPrice, maxBookingPrice);
+        return artistServices.getArtistsByInstrumentAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
     }
 
     //Get the artist record by instrument and booking price less than some amount
@@ -176,19 +182,6 @@ public class ArtistController {
         return artistServices.getPaginatedAndSortedArtists(page, size, sortBy, sortDir);
     }
 
-    //Getting records based on artist name , instrument and booking price
-    @GetMapping("/filterTwo")
-    public List<Artist> getArtistByNameAndInstrumentAndBookingPrice(@RequestParam String firstName,
-                                                                    @RequestParam String instrument,
-                                                                    @RequestParam double bookingPrice){
-        return artistServices.getArtistByNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
-    }
-
-    @GetMapping("/by-fullName")
-    public List<Artist> getArtistByFullName (@RequestParam (name = "f",required = false)  String firstName,
-                                             @RequestParam  (name = "l" ,required = false)String lastName){
-        return artistServices.getArtistByFullName(firstName,lastName);
-    }
     @GetMapping("/sort-by-firstName")
     public List<Artist> getArtistsSorted(
             @RequestParam(defaultValue = "ASC") String direction) {

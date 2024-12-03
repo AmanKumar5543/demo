@@ -8,6 +8,9 @@ import jakarta.persistence.*;
 public class Name {
 
     @Id
+    @GeneratedValue
+    int name_id;
+
     @Column(name = "firstName")
     String firstName;
 
@@ -17,6 +20,14 @@ public class Name {
     @OneToOne(mappedBy = "name")
     @JsonBackReference
     public Artist artist;
+
+    public int getName_id() {
+        return name_id;
+    }
+
+    public void setName_id(int name_id) {
+        this.name_id = name_id;
+    }
 
     public String getFirstName() {
         return firstName;

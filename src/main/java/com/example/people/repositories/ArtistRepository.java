@@ -13,6 +13,7 @@ import java.util.List;
 public interface ArtistRepository extends CrudRepository<Artist,Integer> , JpaRepository<Artist,Integer> {
     List<Artist>findByName_FirstName(String firstName);
     List<Artist>findByInstrument(String instrument);
+    List<Artist>findByBookingPrice(double bookingPrice);
     List<Artist> findByBookingPriceLessThan(double bookingPrice);
     List<Artist> findByBookingPriceGreaterThan(double bookingPrice);
     @Query("SELECT a FROM Artist a WHERE a.bookingPrice BETWEEN :minBookingPrice AND :maxBookingPrice")
@@ -24,8 +25,8 @@ public interface ArtistRepository extends CrudRepository<Artist,Integer> , JpaRe
     List<Artist> findByName_FirstNameAndInstrument(String firstName, String instrument);
     List<Artist> findByName_firstNameAndInstrumentAndBookingPrice(String firstName , String instrument, double bookingPrice);
     List<Artist> findByName_firstNameAndName_lastName (String firstName ,String lastName);
-
-
+    List<Artist> findByInstrumentAndBookingPrice (String instrument ,double bookingPrice);
+    List <Artist> findByName_firstNameAndBookingPrice(String firstName,double bookingPrice);
 }
 
 

@@ -34,12 +34,15 @@ public class ArtistServices {
         return artistRepository.findById(id);
     }
 
-    public List getArtistByName (@RequestParam(name ="name" ,required = false) String firstName){
+    public List getArtistByFirstName (String firstName){
         return artistRepository.findByName_FirstName(firstName);
     }
 
-    public List getArtistByInstrument (@RequestParam(name = "name", required = false)String instrument){
+    public List getArtistByInstrument (String instrument){
         return artistRepository.findByInstrument(instrument);
+    }
+    public List<Artist> getArtistByBookingPrice(double bookingPrice){
+        return artistRepository.findByBookingPrice(bookingPrice);
     }
 
     public Artist createArtist (@RequestBody Artist artist){
@@ -74,7 +77,7 @@ public class ArtistServices {
         return artistRepository.findByBookingPriceBetween(minBookingPrice, maxBookingPrice);
     }
 
-    public List<Artist> getArtistsByInstrumentAndBookingPrice(String instrument, double minBookingPrice, double maxBookingPrice) {
+    public List<Artist> getArtistsByInstrumentAndBookingPriceBetween(String instrument, double minBookingPrice, double maxBookingPrice) {
         return artistRepository.findByInstrumentAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
     }
 
@@ -95,6 +98,12 @@ public class ArtistServices {
 
     public List<Artist> getArtistByNameAndInstrument(String firstName, String instrument){
         return artistRepository.findByName_FirstNameAndInstrument(firstName,instrument);
+    }
+    public List<Artist> getArtistByInstrumentAndBookingPrice(String instrument,double bookingPrice){
+        return artistRepository.findByInstrumentAndBookingPrice(instrument,bookingPrice);
+    }
+    public List<Artist> getArtistByFirstNameAndBookingPrice(String firstName ,double bookingPrice){
+        return artistRepository.findByName_firstNameAndBookingPrice(firstName,bookingPrice);
     }
 
     public List<Artist> getArtistByNameAndInstrumentAndBookingPrice(String firstName,String instrument,double bookingPrice){
