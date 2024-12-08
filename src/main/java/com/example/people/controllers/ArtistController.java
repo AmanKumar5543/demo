@@ -3,7 +3,7 @@ package com.example.people.controllers;
 import com.example.people.entity.Artist;
 
 import com.example.people.services.ArtistServices;
-import com.example.people.repositories.ArtistRepository;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,7 +62,7 @@ public class ArtistController {
     // Get Artist as per their id.
     @GetMapping("/{id}")
     public Optional getArtistById(@PathVariable("id") Integer id) {
-        return this.artistServices.getArtistById(id);
+        return this.artistServices.artistRepository.findById(id);
     }
 
 
@@ -72,10 +72,12 @@ public class ArtistController {
     public Artist createArtist(@RequestBody Artist artist) {
         return this.artistServices.artistRepository.save(artist);
     }
+
+
     //Update an artists record
     @PutMapping("/{id}")
     public Artist updateArtist(@PathVariable("id") Integer id, @RequestBody Artist a) {
-        Optional<Artist> getArtistOptional = this.artistServices.getArtistById(id);
+        Optional<Artist> getArtistOptional = this.artistServices.artistRepository.findById(id);
 
         if (!getArtistOptional.isPresent()) {
             return null;
@@ -100,49 +102,30 @@ public class ArtistController {
         return this.artistServices.artistRepository.save(updatedArtist);
     }
 
-    //Get artists records in the form of pages
-    @GetMapping("/page")
-    public Page<Artist> findByPage (
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "2")int size){
-        return this.artistServices.findByPage(page, size);
-    }
 
-    // Get records sorted by some field like their name or instrument or bookingPrice in asc or desc order
-    @GetMapping("/sort")
-    public List<Artist> sortByField (
-            @RequestParam(defaultValue = "name")String sortBy,
-            @RequestParam(defaultValue = "asc") String order
-    )
-    {
-        Sort sort = order.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        return  this.artistServices.sortBySomeField(sort);
-    }
 
     //Delete a record of artist from artists record
     @DeleteMapping("/{id}")
     public boolean deleteArtist (@PathVariable ("id") Integer id) {
-        this.artistServices.deleteArtist(id);
+        this.artistServices.artistRepository.deleteById(id);
         return true;
     }
 
-
-
-
-    //Get the artist records with booking price in range of some amount
     @GetMapping("/price-range")
-    public List<Artist> getArtistsByPriceRange(@RequestParam double minBookingPrice, @RequestParam double maxBookingPrice) {
+    public List<Artist> getArtistsByPriceRange(
+            @RequestParam (name = "instrument" ,required = false) String instrument,
+            @RequestParam (defaultValue = "0" ,name ="minValue",required = false)double minBookingPrice,
+            @RequestParam (defaultValue = "0" ,name ="maxValue",required = false)double maxBookingPrice) {
+        if(instrument != null && minBookingPrice !=0 && maxBookingPrice !=0){
+            return artistServices.getArtistsByInstrumentAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
+        }if(minBookingPrice !=0 && maxBookingPrice !=0){
         return artistServices.getArtistsByPriceRange(minBookingPrice, maxBookingPrice);
+    }{
+            return new ArrayList<>();
+        }
     }
 
-    //Get the artist record by instrument and booking price
-    @GetMapping("/filter")
-    public List<Artist> getArtistsByInstrumentAndBookingPrice(
-            @RequestParam String instrument,
-            @RequestParam double minBookingPrice,
-            @RequestParam double maxBookingPrice) {
-        return artistServices.getArtistsByInstrumentAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
-    }
+
     //Get the artist records with booking price less than some amount
     @GetMapping("/less-than")
     public List<Artist> getArtistsByPriceLessThan( @RequestParam (name = "instrument" ,required = false) String instrument,
@@ -159,7 +142,7 @@ public class ArtistController {
     @GetMapping("/greater-than")
     public List<Artist> getArtistsByPriceGreaterThan( @RequestParam(name = "instrument" ,required = false) String instrument,
                                                       @RequestParam(defaultValue = "0",name = "bookingPrice",required = false) double bookingPrice) {
-        if(instrument != null &&bookingPrice !=0){
+        if(instrument != null && bookingPrice !=0){
             return artistServices.getArtistsByInstrumentAndBookingPriceGreaterThan(instrument, bookingPrice);
         }if(bookingPrice !=0){
         return artistServices.getArtistsByPriceGreaterThan(bookingPrice);}
@@ -177,15 +160,29 @@ public class ArtistController {
             @RequestParam(defaultValue = "name") String sortBy, // Sort field
             @RequestParam(defaultValue = "asc") String sortDir // Sort direction
     ) {
-        return artistServices.getPaginatedAndSortedArtists(page, size, sortBy, sortDir);
+        if(page != 0 && size !=0 && sortBy !=null && sortDir != null){
+            return artistServices.getPaginatedAndSortedArtists(page, size, sortBy, sortDir);
+        }if (page != 0 && size !=0){
+            return artistServices.findByPage(page,size);
+        }{
+            return null;
+        }
     }
+    // Get records sorted by some field like their name or instrument or bookingPrice in asc or desc order
+    @GetMapping("/sort")
+    public List<Artist> sortByField (
+            @RequestParam(defaultValue = "name")String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(name = "firstName" ,required = false) String firstName
+    ) {
+        if (firstName != null && sortDir != null) {
+            Sort.Direction sortDirection = Sort.Direction.fromString(sortDir.toUpperCase());
+            return artistServices.getArtistSortedByFirstName(sortDirection);
+        }
+        {
+            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            return this.artistServices.sortBySomeField(sort);
+        }
 
-    @GetMapping("/sort-by-firstName")
-    public List<Artist> getArtistsSorted(
-            @RequestParam(defaultValue = "ASC") String direction) {
-        Sort.Direction sortDirection = Sort.Direction.fromString(direction.toUpperCase());
-        return artistServices.getArtistSortedByFirstName(sortDirection);
     }
-
-
 }

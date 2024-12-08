@@ -1,6 +1,6 @@
 package com.example.people.services;
+
 import com.example.people.entity.Artist;
-import com.example.people.entity.Name;
 import com.example.people.repositories.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -8,13 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -30,9 +25,7 @@ public class ArtistServices {
         return artistRepository.findAll();
     }
 
-    public Optional getArtistById(@PathVariable ("id") Integer id){
-        return artistRepository.findById(id);
-    }
+
 
     public List getArtistByFirstName (String firstName){
         return artistRepository.findByName_FirstName(firstName);
@@ -52,17 +45,12 @@ public class ArtistServices {
         return artistRepository.findAll(pageable);
     }
 
-    public List<Artist> sortBySomeField(Sort sort){
-        return artistRepository.findAll(sort);
-    }
-    public Artist updateArtist (@PathVariable ("id") Integer id, @RequestBody Artist a){
+
+    public Artist updateArtist (Integer id,  Artist a){
         return artistRepository.save(a);
     }
 
-    public boolean deleteArtist (@PathVariable("id") Integer id){
-        artistRepository.deleteById(id);
-        return true;
-    }
+
     public List<Artist> getArtistsByPriceLessThan(double bookingPrice) {
         return artistRepository.findByBookingPriceLessThan(bookingPrice);
     }
@@ -94,6 +82,7 @@ public class ArtistServices {
         return artistRepository.findAll(pageable);
     }
 
+
     public List<Artist> getArtistByNameAndInstrument(String firstName, String instrument){
         return artistRepository.findByName_FirstNameAndInstrument(firstName,instrument);
     }
@@ -113,6 +102,9 @@ public class ArtistServices {
 
     public List<Artist> getArtistSortedByFirstName(Sort.Direction direction) {
         return artistRepository.findAll(Sort.by(direction, "name.firstName"));
+    }
+    public List<Artist> sortBySomeField(Sort sort){
+        return artistRepository.findAll(sort);
     }
 
 }

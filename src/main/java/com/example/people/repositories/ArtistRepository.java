@@ -1,6 +1,6 @@
 package com.example.people.repositories;
+
 import com.example.people.entity.Artist;
-import com.example.people.entity.Name;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,6 +27,7 @@ public interface ArtistRepository extends CrudRepository<Artist,Integer> , JpaRe
     List<Artist> findByName_firstNameAndName_lastName (String firstName ,String lastName);
     List<Artist> findByInstrumentAndBookingPrice (String instrument ,double bookingPrice);
     List <Artist> findByName_firstNameAndBookingPrice(String firstName,double bookingPrice);
+
 }
 
 
