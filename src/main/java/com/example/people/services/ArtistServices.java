@@ -16,37 +16,37 @@ import java.util.List;
 public class ArtistServices {
 
     public final ArtistRepository artistRepository;
+
     @Autowired
-    public ArtistServices(final ArtistRepository artistRepository){
+    public ArtistServices(final ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
     }
 
-    public Iterable getAllArtist(){
+    public Iterable getAllArtist() {
         return artistRepository.findAll();
     }
 
 
-
-    public List getArtistByFirstName (String firstName){
+    public List getArtistByFirstName(String firstName) {
         return artistRepository.findByName_FirstName(firstName);
     }
 
-    public List getArtistByInstrument (String instrument){
+    public List getArtistByInstrument(String instrument) {
         return artistRepository.findByInstrument(instrument);
     }
-    public List<Artist> getArtistByBookingPrice(double bookingPrice){
+
+    public List<Artist> getArtistByBookingPrice(double bookingPrice) {
         return artistRepository.findByBookingPrice(bookingPrice);
     }
 
 
-
-    public Page<Artist> findByPage (int page, int size){
+    public Page<Artist> findByPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return artistRepository.findAll(pageable);
     }
 
 
-    public Artist updateArtist (Integer id,  Artist a){
+    public Artist updateArtist(Integer id, Artist a) {
         return artistRepository.save(a);
     }
 
@@ -59,6 +59,7 @@ public class ArtistServices {
         return artistRepository.findByBookingPriceGreaterThan(bookingPrice);
 
     }
+
     public List<Artist> getArtistsByPriceRange(double minBookingPrice, double maxBookingPrice) {
         return artistRepository.findByBookingPriceBetween(minBookingPrice, maxBookingPrice);
     }
@@ -74,6 +75,7 @@ public class ArtistServices {
     public List<Artist> getArtistsByInstrumentAndBookingPriceGreaterThan(String instrument, double bookingPrice) {
         return artistRepository.findByInstrumentAndBookingPriceGreaterThan(instrument, bookingPrice);
     }
+
     public Page<Artist> getPaginatedAndSortedArtists(int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortBy).ascending()
@@ -83,27 +85,31 @@ public class ArtistServices {
     }
 
 
-    public List<Artist> getArtistByNameAndInstrument(String firstName, String instrument){
-        return artistRepository.findByName_FirstNameAndInstrument(firstName,instrument);
-    }
-    public List<Artist> getArtistByInstrumentAndBookingPrice(String instrument,double bookingPrice){
-        return artistRepository.findByInstrumentAndBookingPrice(instrument,bookingPrice);
-    }
-    public List<Artist> getArtistByFirstNameAndBookingPrice(String firstName ,double bookingPrice){
-        return artistRepository.findByName_firstNameAndBookingPrice(firstName,bookingPrice);
+    public List<Artist> getArtistByNameAndInstrument(String firstName, String instrument) {
+        return artistRepository.findByName_FirstNameAndInstrument(firstName, instrument);
     }
 
-    public List<Artist> getArtistByNameAndInstrumentAndBookingPrice(String firstName,String instrument,double bookingPrice){
+    public List<Artist> getArtistByInstrumentAndBookingPrice(String instrument, double bookingPrice) {
+        return artistRepository.findByInstrumentAndBookingPrice(instrument, bookingPrice);
+    }
+
+    public List<Artist> getArtistByFirstNameAndBookingPrice(String firstName, double bookingPrice) {
+        return artistRepository.findByName_firstNameAndBookingPrice(firstName, bookingPrice);
+    }
+
+    public List<Artist> getArtistByNameAndInstrumentAndBookingPrice(String firstName, String instrument, double bookingPrice) {
         return artistRepository.findByName_firstNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
     }
-    public List<Artist> getArtistByFullName(String firstName ,String lastName){
-        return artistRepository.findByName_firstNameAndName_lastName(firstName,lastName);
+
+    public List<Artist> getArtistByFullName(String firstName, String lastName) {
+        return artistRepository.findByName_firstNameAndName_lastName(firstName, lastName);
     }
 
     public List<Artist> getArtistSortedByFirstName(Sort.Direction direction) {
         return artistRepository.findAll(Sort.by(direction, "name.firstName"));
     }
-    public List<Artist> sortBySomeField(Sort sort){
+
+    public List<Artist> sortBySomeField(Sort sort) {
         return artistRepository.findAll(sort);
     }
 

@@ -12,8 +12,8 @@ public class Artist {
     int id;
 
 
-    @OneToOne (cascade = CascadeType.ALL)
-    @JsonManagedReference                                      
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference
     public Name name;
 
     @Column(name = "Instrument")
