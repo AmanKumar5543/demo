@@ -9,7 +9,7 @@ public class Name {
 
     @Id
     @GeneratedValue
-    int name_id;
+    int nameId;
 
     @Column(name = "firstName")
     String firstName;
@@ -21,12 +21,12 @@ public class Name {
     @JsonBackReference
     public Artist artist;
 
-    public int getName_id() {
-        return name_id;
+    public int getNameId() {
+        return nameId;
     }
 
-    public void setName_id(int name_id) {
-        this.name_id = name_id;
+    public void setNameId(int nameId) {
+        this.nameId = nameId;
     }
 
     public String getFirstName() {
