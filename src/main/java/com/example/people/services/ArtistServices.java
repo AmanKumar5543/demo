@@ -113,4 +113,33 @@ public class ArtistServices {
         return artistRepository.findAll(sort);
     }
 
+    public Page<Artist> getArtistsByFirstNameAndSortByBookingPrice(String firstName, int page, int size, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by("bookingPrice").ascending() :
+                Sort.by("bookingPrice").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return artistRepository.findByName_firstNameContainingIgnoreCase(firstName, pageable); // Use repository method
+    }
+
+    public Page<Artist> getArtistByLastNameAndSortByBookingPrice(String lastName, int page, int size, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by("bookingPrice").ascending() :
+                Sort.by("bookingPrice").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return artistRepository.findByName_lastNameContainingIgnoreCase(lastName, pageable);
+    }
+
+    public Page<Artist> getArtistByInstrumentAndSortByBookingPrice(String instrument, int page, int size, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by("bookingPrice").ascending() :
+                Sort.by("bookingPrice").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return artistRepository.findByInstrumentContainingIgnoreCase(instrument, pageable);
+    }
+
+    public Page<Artist> getArtistByFullNameSortedByBookingPrice(String firstName, String lastName, int page, int size, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by("bookingPrice").ascending() :
+                Sort.by("bookingPrice").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return artistRepository.findByName_firstNameAndName_lastNameContainingIgnoreCase(firstName, lastName, pageable);
+    }
+
+
 }

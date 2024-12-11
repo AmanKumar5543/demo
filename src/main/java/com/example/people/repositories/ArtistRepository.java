@@ -42,6 +42,13 @@ public interface ArtistRepository extends CrudRepository<Artist, Integer>, JpaRe
 
     List<Artist> findByName_firstNameAndBookingPrice(String firstName, double bookingPrice);
 
+    Page<Artist> findByName_firstNameAndName_lastNameContainingIgnoreCase(String firstName, String lastName, Pageable pageable);
+
+    Page<Artist> findByName_firstNameContainingIgnoreCase(String firstName, Pageable pageable);
+
+    Page<Artist> findByName_lastNameContainingIgnoreCase(String lastName, Pageable pageable);
+
+    Page<Artist> findByInstrumentContainingIgnoreCase(String instrument, Pageable pageable);
 }
 
 

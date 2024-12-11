@@ -190,4 +190,32 @@ public class ArtistController {
         }
 
     }
+
+    @GetMapping("/filter")
+    public Page<Artist> getArtistsByFirstName(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String instrument,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size,
+            @RequestParam(defaultValue = "asc", required = false) String sortDir
+    ) {
+        if (firstName != null && lastName != null) {
+            return this.artistServices.getArtistByFullNameSortedByBookingPrice(firstName, lastName, page, size, sortDir);
+        }
+        {
+            if (firstName != null) {
+                return this.artistServices.getArtistsByFirstNameAndSortByBookingPrice(firstName, page, size, sortDir);
+            }
+        }
+        if (lastName != null) {
+            return this.artistServices.getArtistByLastNameAndSortByBookingPrice(lastName, page, size, sortDir);
+        }
+        if (instrument != null) {
+            return this.artistServices.getArtistByInstrumentAndSortByBookingPrice(instrument, page, size, sortDir);
+        }
+        return null;
+    }
+
+
 }
