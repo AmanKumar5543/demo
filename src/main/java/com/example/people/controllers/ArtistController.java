@@ -28,13 +28,13 @@ public class ArtistController {
     public Iterable getAllArtist(@RequestParam(name = "firstName", required = false) String firstName,
                                  @RequestParam(name = "instrument", required = false) String instrument,
                                  @RequestParam(defaultValue = "0", name = "bookingPrice", required = false) Double bookingPrice,
-                                 @RequestParam(name = "lastName", required = false) String lastName) {
+                                 @RequestParam(name = "lastName", required = false) String lastName,
+                                 @RequestParam(defaultValue = "0", required = false) int page,
+                                 @RequestParam(defaultValue = "10", required = false) int size,
+                                 @RequestParam(defaultValue = "asc", required = false) String sortDir) {
 
         if (firstName != null && instrument != null && bookingPrice != 0) {
             return this.artistServices.getArtistByNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
-        }
-        if (instrument != null && bookingPrice != 0) {
-            return this.artistServices.getArtistByInstrumentAndBookingPrice(instrument, bookingPrice);
         }
         if (firstName != null && instrument != null) {
             return this.artistServices.getArtistByNameAndInstrument(firstName, instrument);
@@ -42,9 +42,27 @@ public class ArtistController {
         if (firstName != null && bookingPrice != 0) {
             return this.artistServices.getArtistByFirstNameAndBookingPrice(firstName, bookingPrice);
         }
-        if (firstName != null && lastName != null) {
+        if (firstName != null && lastName != null && page != 0) {
             return this.artistServices.getArtistByFullName(firstName, lastName);
         }
+        if (firstName != null && lastName != null) {
+            return this.artistServices.getArtistByFullNameSortedByBookingPrice(firstName, lastName, page, size, sortDir);
+        }
+        {
+            if (firstName != null && page != 0) {
+                return this.artistServices.getArtistsByFirstNameAndSortByBookingPrice(firstName, page, size, sortDir);
+            }
+        }
+        if (lastName != null && page != 0) {
+            return this.artistServices.getArtistByLastNameAndSortByBookingPrice(lastName, page, size, sortDir);
+        }
+        if (instrument != null && page != 0) {
+            return this.artistServices.getArtistByInstrumentAndSortByBookingPrice(instrument, page, size, sortDir);
+        }
+        if (instrument != null && bookingPrice != 0) {
+            return this.artistServices.getArtistByInstrumentAndBookingPrice(instrument, bookingPrice);
+        }
+
         if (firstName != null) {
             return this.artistServices.getArtistByFirstName(firstName);
         }
@@ -102,9 +120,9 @@ public class ArtistController {
 
     //Delete a record of artist from artists record
     @DeleteMapping("/{id}")
-    public boolean deleteArtist(@PathVariable("id") Integer id) {
+    public void deleteArtist(@PathVariable("id") Integer id) {
         this.artistServices.artistRepository.deleteById(id);
-        return true;
+
     }
 
     @GetMapping("/price-range")
@@ -190,32 +208,5 @@ public class ArtistController {
         }
 
     }
-
-    @GetMapping("/filter")
-    public Page<Artist> getArtistsByFirstName(
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String instrument,
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "10", required = false) int size,
-            @RequestParam(defaultValue = "asc", required = false) String sortDir
-    ) {
-        if (firstName != null && lastName != null) {
-            return this.artistServices.getArtistByFullNameSortedByBookingPrice(firstName, lastName, page, size, sortDir);
-        }
-        {
-            if (firstName != null) {
-                return this.artistServices.getArtistsByFirstNameAndSortByBookingPrice(firstName, page, size, sortDir);
-            }
-        }
-        if (lastName != null) {
-            return this.artistServices.getArtistByLastNameAndSortByBookingPrice(lastName, page, size, sortDir);
-        }
-        if (instrument != null) {
-            return this.artistServices.getArtistByInstrumentAndSortByBookingPrice(instrument, page, size, sortDir);
-        }
-        return null;
-    }
-
 
 }
