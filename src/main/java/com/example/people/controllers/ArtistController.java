@@ -27,26 +27,32 @@ public class ArtistController {
     @GetMapping
     public Iterable getAllArtist(@RequestParam(name = "firstName", required = false) String firstName,
                                  @RequestParam(name = "instrument", required = false) String instrument,
-                                 @RequestParam(defaultValue = "0", name = "bookingPrice", required = false) Double bookingPrice,
+                                 @RequestParam(defaultValue = "0", name = "bookingPriceMin", required = false) Double bookingPriceMin,
+                                 @RequestParam(name = "bookingPriceMax", required = false) Double bookingPriceMax,
                                  @RequestParam(name = "lastName", required = false) String lastName,
                                  @RequestParam(defaultValue = "0", required = false) int page,
                                  @RequestParam(defaultValue = "10", required = false) int size,
                                  @RequestParam(defaultValue = "asc", required = false) String sortDir) {
 
-        if (firstName != null && instrument != null && bookingPrice != 0) {
-            return this.artistServices.getArtistByNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
+//        if (firstName != null && instrument != null && bookingPrice != 0) {
+//            return this.artistServices.getArtistByNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
+//        }
+//        if (firstName != null && instrument != null) {
+//            return this.artistServices.getArtistByNameAndInstrument(firstName, instrument);
+//        }
+//        if (firstName != null && bookingPrice != 0) {
+//            return this.artistServices.getArtistByFirstNameAndBookingPrice(firstName, bookingPrice);
+//        }
+
+        if (instrument != null && bookingPriceMin != null && bookingPriceMax != null) {
+            return artistServices.getArtistsByInstrumentAndBookingPriceBetween(instrument, bookingPriceMin, bookingPriceMax);
         }
-        if (firstName != null && instrument != null) {
-            return this.artistServices.getArtistByNameAndInstrument(firstName, instrument);
-        }
-        if (firstName != null && bookingPrice != 0) {
-            return this.artistServices.getArtistByFirstNameAndBookingPrice(firstName, bookingPrice);
-        }
+
         if (firstName != null && lastName != null && page != 0) {
-            return this.artistServices.getArtistByFullName(firstName, lastName);
+            return artistServices.getArtistByFullName(firstName, lastName);
         }
         if (firstName != null && lastName != null) {
-            return this.artistServices.getArtistByFullNameSortedByBookingPrice(firstName, lastName, page, size, sortDir);
+            return artistServices.getArtistByFullNameSortedByBookingPrice(firstName, lastName, page, size, sortDir);
         }
         {
             if (firstName != null && page != 0) {
@@ -59,9 +65,9 @@ public class ArtistController {
         if (instrument != null && page != 0) {
             return this.artistServices.getArtistByInstrumentAndSortByBookingPrice(instrument, page, size, sortDir);
         }
-        if (instrument != null && bookingPrice != 0) {
-            return this.artistServices.getArtistByInstrumentAndBookingPrice(instrument, bookingPrice);
-        }
+//        if (instrument != null && bookingPrice != 0) {
+//            return this.artistServices.getArtistByInstrumentAndBookingPrice(instrument, bookingPrice);
+//        }
 
         if (firstName != null) {
             return this.artistServices.getArtistByFirstName(firstName);
@@ -69,9 +75,9 @@ public class ArtistController {
         if (instrument != null) {
             return this.artistServices.getArtistByInstrument(instrument);
         }
-        if (bookingPrice != 0) {
-            return this.artistServices.getArtistByBookingPrice(bookingPrice);
-        }
+//        if (bookingPrice != 0) {
+//            return this.artistServices.getArtistByBookingPrice(bookingPrice);
+//        }
         return this.artistServices.getAllArtist();
     }
 

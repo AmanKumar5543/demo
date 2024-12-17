@@ -1,5 +1,7 @@
 package com.example.people.entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -20,7 +22,18 @@ public class Artist {
     String instrument;
 
     @Column(name = "Booking Price")
-    int bookingPrice;
+    private int bookingPrice;
+
+    @OneToMany(mappedBy = "artist")
+    private List<SetList> setLists;
+
+    public List<SetList> getSetLists() {
+        return setLists;
+    }
+
+    public void setSetLists(List<SetList> setLists) {
+        this.setLists = setLists;
+    }
 
     public int getId() {
         return id;
