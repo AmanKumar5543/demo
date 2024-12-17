@@ -1,5 +1,6 @@
 package com.example.people.entity;
 
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -24,7 +25,7 @@ public class Artist {
     @Column(name = "Booking Price")
     private int bookingPrice;
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.REMOVE)
     private List<SetList> setLists;
 
     public List<SetList> getSetLists() {
