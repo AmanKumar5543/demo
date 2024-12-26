@@ -1,12 +1,13 @@
 package com.example.people.entity;
 
+
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Data
 @Getter
@@ -25,14 +26,13 @@ public class Artist {
     @JsonManagedReference
     public Name name;
 
-
     @Column(name = "Instrument")
     String instrument;
 
     @Column(name = "Booking Price")
     private int bookingPrice;
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.REMOVE)
     private List<SetList> setLists;
 
 }
