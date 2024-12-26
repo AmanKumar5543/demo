@@ -2,6 +2,7 @@ package com.example.people.services;
 
 import com.example.people.entity.Artist;
 import com.example.people.repositories.ArtistRepository;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@JsonFormat(with = {JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES})
 @Service
 public class ArtistServices {
 
@@ -28,11 +29,11 @@ public class ArtistServices {
 
 
     public List getArtistByFirstName(String firstName) {
-        return artistRepository.findByName_FirstName(firstName);
+        return artistRepository.findByName_FirstNameIgnoreCase(firstName);
     }
 
     public List getArtistByInstrument(String instrument) {
-        return artistRepository.findByInstrument(instrument);
+        return artistRepository.findByInstrumentIgnoreCase(instrument);
     }
 
     public List<Artist> getArtistByBookingPrice(double bookingPrice) {
@@ -65,7 +66,7 @@ public class ArtistServices {
     }
 
     public List<Artist> getArtistsByInstrumentAndBookingPriceBetween(String instrument, double minBookingPrice, double maxBookingPrice) {
-        return artistRepository.findByInstrumentAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
+        return artistRepository.findByInstrumentIgnoreCaseAndBookingPriceBetween(instrument, minBookingPrice, maxBookingPrice);
     }
 
     public List<Artist> getArtistsByInstrumentAndBookingPriceLessThan(String instrument, double bookingPrice) {
@@ -86,11 +87,11 @@ public class ArtistServices {
 
 
     public List<Artist> getArtistByNameAndInstrument(String firstName, String instrument) {
-        return artistRepository.findByName_FirstNameAndInstrument(firstName, instrument);
+        return artistRepository.findByName_FirstNameIgnoreCaseAndInstrumentIgnoreCase(firstName, instrument);
     }
 
     public List<Artist> getArtistByInstrumentAndBookingPrice(String instrument, double bookingPrice) {
-        return artistRepository.findByInstrumentAndBookingPrice(instrument, bookingPrice);
+        return artistRepository.findByInstrumentIgnoreCaseAndBookingPrice(instrument, bookingPrice);
     }
 
     public List<Artist> getArtistByFirstNameAndBookingPrice(String firstName, double bookingPrice) {
@@ -102,7 +103,7 @@ public class ArtistServices {
     }
 
     public List<Artist> getArtistByFullName(String firstName, String lastName) {
-        return artistRepository.findByName_firstNameAndName_lastName(firstName, lastName);
+        return artistRepository.findByName_firstNameIgnoreCaseAndName_lastNameIgnoreCase(firstName, lastName);
     }
 
     public List<Artist> getArtistSortedByFirstName(Sort.Direction direction) {
@@ -140,6 +141,9 @@ public class ArtistServices {
         Pageable pageable = PageRequest.of(page, size, sort);
         return artistRepository.findByName_firstNameAndName_lastNameContainingIgnoreCase(firstName, lastName, pageable);
     }
+//    public List<Artist> getArtistBySetListTitle(String title){
+//        return artistRepository.findBySetList_titleIgnoreCase(title);
+//    }
 
 
 }

@@ -11,9 +11,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ArtistRepository extends CrudRepository<Artist, Integer>, JpaRepository<Artist, Integer> {
-    List<Artist> findByName_FirstName(String firstName);
+    List<Artist> findByName_FirstNameIgnoreCase(String firstName);
 
-    List<Artist> findByInstrument(String instrument);
+    List<Artist> findByInstrumentIgnoreCase(String instrument);
 
     List<Artist> findByBookingPrice(double bookingPrice);
 
@@ -24,7 +24,7 @@ public interface ArtistRepository extends CrudRepository<Artist, Integer>, JpaRe
     @Query("SELECT a FROM Artist a WHERE a.bookingPrice BETWEEN :minBookingPrice AND :maxBookingPrice")
     List<Artist> findByBookingPriceBetween(@Param("minBookingPrice") double minBookingPrice, @Param("maxBookingPrice") double maxBookingPrice);
 
-    List<Artist> findByInstrumentAndBookingPriceBetween(String instrument, double minBookingPrice, double maxBookingPrice);
+    List<Artist> findByInstrumentIgnoreCaseAndBookingPriceBetween(String instrument, double minBookingPrice, double maxBookingPrice);
 
     List<Artist> findByInstrumentAndBookingPriceLessThan(String instrument, double bookingPrice);
 
@@ -32,13 +32,13 @@ public interface ArtistRepository extends CrudRepository<Artist, Integer>, JpaRe
 
     Page<Artist> findAll(Pageable pageable);
 
-    List<Artist> findByName_FirstNameAndInstrument(String firstName, String instrument);
+    List<Artist> findByName_FirstNameIgnoreCaseAndInstrumentIgnoreCase(String firstName, String instrument);
 
     List<Artist> findByName_firstNameAndInstrumentAndBookingPrice(String firstName, String instrument, double bookingPrice);
 
-    List<Artist> findByName_firstNameAndName_lastName(String firstName, String lastName);
+    List<Artist> findByName_firstNameIgnoreCaseAndName_lastNameIgnoreCase(String firstName, String lastName);
 
-    List<Artist> findByInstrumentAndBookingPrice(String instrument, double bookingPrice);
+    List<Artist> findByInstrumentIgnoreCaseAndBookingPrice(String instrument, double bookingPrice);
 
     List<Artist> findByName_firstNameAndBookingPrice(String firstName, double bookingPrice);
 
@@ -49,6 +49,8 @@ public interface ArtistRepository extends CrudRepository<Artist, Integer>, JpaRe
     Page<Artist> findByName_lastNameContainingIgnoreCase(String lastName, Pageable pageable);
 
     Page<Artist> findByInstrumentContainingIgnoreCase(String instrument, Pageable pageable);
+
+//    List<Artist> findBySetList_titleIgnoreCase(String title);
 }
 
 
