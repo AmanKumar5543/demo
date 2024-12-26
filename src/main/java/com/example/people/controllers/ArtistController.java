@@ -41,13 +41,6 @@ public class ArtistController {
                                  @RequestParam(defaultValue = "asc", required = false) String sortDir,
                                  @RequestParam(name = "Title", required = false) String title) {
 
-//        if (firstName != null && instrument != null && bookingPrice != 0) {
-//            return this.artistServices.getArtistByNameAndInstrumentAndBookingPrice(firstName, instrument, bookingPrice);
-//        }
-
-//        if (firstName != null && bookingPrice != 0) {
-//            return this.artistServices.getArtistByFirstNameAndBookingPrice(firstName, bookingPrice);
-//        }
 
         if (instrument != null && bookingPriceMin != null && bookingPriceMax != null) {
             return artistServices.getArtistsByInstrumentAndBookingPriceBetween(instrument, bookingPriceMin, bookingPriceMax);
@@ -75,9 +68,6 @@ public class ArtistController {
         if (firstName != null && instrument != null) {
             return this.artistServices.getArtistByNameAndInstrument(firstName, instrument);
         }
-//        if (instrument != null && bookingPrice != 0) {
-//            return this.artistServices.getArtistByInstrumentAndBookingPrice(instrument, bookingPrice);
-//        }
 
         if (firstName != null) {
             return this.artistServices.getArtistByFirstName(firstName);
@@ -85,12 +75,7 @@ public class ArtistController {
         if (instrument != null) {
             return this.artistServices.getArtistByInstrument(instrument);
         }
-//        if(title != null){
-//            return this.artistServices.getArtistBySetListTitle(title);
-//        }
-//        if (bookingPrice != 0) {
-//            return this.artistServices.getArtistByBookingPrice(bookingPrice);
-//        }
+
         return this.artistServices.getAllArtist();
     }
 
