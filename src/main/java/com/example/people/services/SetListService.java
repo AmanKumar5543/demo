@@ -7,6 +7,7 @@ import com.example.people.repositories.SetListRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
@@ -45,7 +46,11 @@ public class SetListService {
 
     }
 
-    public SetList updateSetlist(int artistId, SetList setList) {
+    public SetList updateSetlist(int artistId, String id, SetList setList) {
         return setListRepository.save(setList);
+    }
+
+    public Optional<SetList> getBySetListId(String id) {
+        return setListRepository.findById(id);
     }
 }
