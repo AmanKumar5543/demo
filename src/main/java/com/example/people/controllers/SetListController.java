@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Optional;
 
 
 @RestController
@@ -34,15 +34,15 @@ public class SetListController {
         return setListService.deleteSetList(artistId);
     }
 
-    @PutMapping
-    public SetList updateSetList(@PathVariable("artistId") int artistId, @RequestBody SetList s) {
-        List<SetList> getSetListOptional = this.setListService.getByArtistId(artistId);
+    @PutMapping({"setListId"})
+    public SetList updateSetList(@PathVariable("artistId") int artistId, @PathVariable("setListId") String id, @RequestParam SetList s) {
+        Optional<SetList> setLists = this.setListService.getBySetListId(id);
 
-        if (getSetListOptional.isEmpty()) {
+        if (setLists.isEmpty()) {
             return null;
         }
 
-        SetList updatedSetList = getSetListOptional.get(artistId);
+        SetList updatedSetList = setLists.get();
 
         if (s.getTitle() != null) {
             updatedSetList.setTitle(s.getTitle());
@@ -50,7 +50,7 @@ public class SetListController {
         if (s.getSongs() != null) {
             updatedSetList.setSongs(s.getSongs());
         }
-        SetList updateSetlist = this.setListService.updateSetlist(artistId, updatedSetList);
+        SetList updateSetlist = this.setListService.updateSetlist(artistId, id, s);
         return updateSetlist;
 
     }
